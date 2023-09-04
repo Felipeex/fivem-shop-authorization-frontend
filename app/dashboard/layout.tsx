@@ -1,0 +1,55 @@
+import { Profile } from "@/components/profile";
+import { authOptions } from "@/config/auth";
+import { getServerSession } from "next-auth";
+import { AuthApi } from "../services/auth-api";
+import { cookies } from "next/headers";
+import Link from "next/link";
+
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
+  const cookieStore = cookies();
+  const cookie = cookieStore.get("next-auth.session-token")?.value;
+  if (!cookie) return <>{children}</>;
+  const plan = await AuthApi("/me/plan", {
+    headers: {
+      Authorization: `Bearer ${cookie}`,
+    },
+  });
+
+  return (
+    <>
+      {!plan.data && (
+        <div className="w-full py-[5px] bg-[#5F71CB] text-center">
+          <span>
+            Faça sua assinatura em nosso discord, para ter acesso a criação de
+            produto
+          </span>
+        </div>
+      )}
+
+      {plan.data && plan.data.isExpired && (
+        <div className="w-full py-[5px] bg-[#FF6B6B] text-center">
+          <span>
+            Sua assinatura acabou, renove-a para ter acesso ao serviço
+            novamente!
+          </span>
+        </div>
+      )}
+      <main className="max-w-[90vw] m-auto">
+        <header className="mt-[50px] flex justify-between">
+          <Profile session={session} />
+          <Link href="dashboard/product/create">
+            <button className="mt-[15px] bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
+              Criar Produto
+            </button>
+          </Link>
+        </header>
+        <div className="mt-[50px]">{children}</div>
+      </main>
+    </>
+  );
+}
