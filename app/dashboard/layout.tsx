@@ -1,9 +1,10 @@
 import { Profile } from "@/components/profile";
 import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
-import { AuthApi } from "../services/auth-api";
 import { cookies } from "next/headers";
+import { verifyPlan } from "../utils/verifyPlan";
 import Link from "next/link";
+import { UnplannedAlert } from "@/components/unplanned-alert";
 
 export default async function DashboardLayout({
   children,
@@ -14,14 +15,14 @@ export default async function DashboardLayout({
   const cookieStore = cookies();
   const cookie = cookieStore.get("next-auth.session-token")?.value;
   if (!cookie) return <>{children}</>;
-  const plan = await AuthApi("/me/plan", {
-    headers: {
-      Authorization: `Bearer ${cookie}`,
-    },
-  });
+  const plan = await verifyPlan(cookie);
 
   return (
     <>
+      {!plan.data && <UnplannedAlert name={session?.user?.name!} />}
+      {plan.data.isExpired && (
+        <UnplannedAlert name={session?.user?.name!} expired />
+      )}
       {!plan.data && (
         <div className="w-full py-[5px] bg-[#5F71CB] text-center">
           <span>
@@ -42,11 +43,13 @@ export default async function DashboardLayout({
       <main className="max-w-[90vw] m-auto">
         <header className="mt-[50px] flex justify-between">
           <Profile session={session} />
-          <Link href="dashboard/product/create">
-            <button className="mt-[15px] bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
-              Criar Produto
-            </button>
-          </Link>
+          {plan.data && (
+            <Link href="dashboard/product/create">
+              <button className="mt-[15px] bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
+                Criar Produto
+              </button>
+            </Link>
+          )}
         </header>
         <div className="mt-[50px]">{children}</div>
       </main>

@@ -1,5 +1,5 @@
-import type { AuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import type { AuthOptions } from "next-auth";
 import { sign, verify } from "jsonwebtoken";
 import { AuthApi } from "@/app/services/auth-api";
 
@@ -22,13 +22,11 @@ export const authOptions: AuthOptions = {
       }
     },
   },
-  secret: "ASDSDASDAASDASDASD3W24534TERGE",
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     DiscordProvider({
-      clientId:
-        "1147804958188638300" /* process.env.DISCORD_CLIENT_ID as string */,
-      clientSecret:
-        "RBf1_ZI81ZnZ3JAMrNVNxR3kbUHSC2wY" /* process.env.DISCORD_CLIENT_ID as string */,
+      clientId: process.env.DISCORD_CLIENT_ID as string,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
     }),
   ],
   callbacks: {

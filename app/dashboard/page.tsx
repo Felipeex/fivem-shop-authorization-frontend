@@ -2,6 +2,8 @@ import { authOptions } from "@/config/auth";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { verifyPlan } from "../utils/verifyPlan";
 
 export const metadata: Metadata = {
   title: "Dashboard - Autenticação",
@@ -13,18 +15,23 @@ export default async function Page() {
   if (!session) {
     redirect("/");
   }
+  const cookieStore = cookies();
+  const cookie = cookieStore.get("next-auth.session-token")?.value;
+  const plan = await verifyPlan(cookie!);
 
   return (
     <section className="flex">
-      <div className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
-        <h2 className="font-normal text-[16px] leading-none">Meu produto</h2>
-        <span className="text-[#75808A] font-normal text-[16px] leading-none">
-          Clique ao botão abaixo
-        </span>
-        <button className="mt-[15px] bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
-          Criar meu primeiro produto
-        </button>
-      </div>
+      {plan.data && (
+        <div className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
+          <h2 className="font-normal text-[16px] leading-none">Meu produto</h2>
+          <span className="text-[#75808A] font-normal text-[16px] leading-none">
+            Clique ao botão abaixo
+          </span>
+          <button className="mt-[15px] bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
+            Criar meu primeiro produto
+          </button>
+        </div>
+      )}
     </section>
   );
 }
