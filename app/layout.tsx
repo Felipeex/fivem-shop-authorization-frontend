@@ -18,6 +18,13 @@ export const metadata: Metadata = {
     "fivem-security",
   ],
   category: "security",
+  openGraph: {
+    title: "Fivem Shop - Autenticação",
+    description: "Serviço de autenticação para Fivem.",
+    images: [
+      "https://cdn.discordapp.com/attachments/946522153887621140/1149213477748088852/fivem-shop.png",
+    ],
+  },
 };
 
 export default async function RootLayout({
