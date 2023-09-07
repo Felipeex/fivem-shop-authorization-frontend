@@ -5,14 +5,19 @@ import * as Accordion from "@radix-ui/react-accordion";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 export function DiscordToken() {
+  const [tooltipOpen, setTooltopOpen] = useState(false);
   const [inputToken, setInputToken] = useState(
     "2390I4R2398JI9WENFJINDFJINSDJIFNSDIJFJ8asassssasasaasasasasasUHR78U34HRU43HU"
   );
   const [copied, setCopied] = useState(false);
 
   async function handleCopy(e: React.MouseEvent<HTMLInputElement>) {
+    setTooltopOpen(true);
     setCopied(true);
     await navigator.clipboard.writeText(inputToken);
+    setTimeout(() => {
+      setTooltopOpen(false);
+    }, 3000);
   }
 
   return (
@@ -31,9 +36,17 @@ export function DiscordToken() {
         </AccordionTrigger>
         <AccordionContent>
           <span className="text-[17px] font-medium">Token</span>
-          <Tooltip.Root>
+          <Tooltip.Root open={tooltipOpen}>
             <Tooltip.Trigger asChild>
               <div
+                onMouseEnter={() => setTooltopOpen(true)}
+                onMouseLeave={() => {
+                  copied
+                    ? setTimeout(() => {
+                        setTooltopOpen(false);
+                      }, 2000)
+                    : setTooltopOpen(false);
+                }}
                 className="w-full relative mt-[10px] rounded-[5px] overflow-hidden"
                 onClick={handleCopy}
               >
@@ -51,6 +64,7 @@ export function DiscordToken() {
                 sideOffset={5}
               >
                 {copied ? "Copiado" : "Copiar"}
+
                 <Tooltip.Arrow className="fill-[#444851]" />
               </Tooltip.Content>
             </Tooltip.Portal>
