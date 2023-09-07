@@ -12,7 +12,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="w-screen h-screen bg-[url('../assets/background.svg')] flex items-center justify-center">
+    <main className="w-screen h-screen flex items-center justify-center">
       <section className="w-[695px] flex flex-col overflow-hidden rounded-[10px]">
         <div className="relative w-full h-[282px] bg-[#5F71CB] flex items-center justify-center">
           <span className="absolute left-4 top-4 icon-[typcn--plus] opacity-20 text-[38px]"></span>

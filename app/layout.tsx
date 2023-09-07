@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { NextAuthProvider } from "@/components/next-auth/provider";
+import { TooltipProvider } from "@/components/tooltip";
 
 const poppins = Poppins({ weight: ["500", "400", "700"], subsets: ["latin"] });
 
@@ -32,7 +33,9 @@ export default async function RootLayout({
   return (
     <html lang="pt-br" suppressHydrationWarning={true}>
       <body className={poppins.className}>
-        <NextAuthProvider>{children}</NextAuthProvider>
+        <TooltipProvider>
+          <NextAuthProvider>{children}</NextAuthProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

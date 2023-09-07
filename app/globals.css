@@ -4,7 +4,6 @@
 
 body {
   background: #2E3035;
-  background-image: url("../assets/background.svg");
   color: #FFF;
   -webkit-font-smoothing: antialiased;
 }
