@@ -1,7 +1,14 @@
+import Link from "next/link";
+
 export default function Page() {
   return (
     <>
-      <h1 className="text-4xl font-bold">Criando seu produto</h1>
+      <Link href="/dashboard">
+        <ul className="flex items-center gap-4">
+          <span className="icon-[ep--arrow-left-bold] text-3xl" />
+          <h1 className="text-[38px] font-bold">Criando seu produto</h1>
+        </ul>
+      </Link>
       <div className="w-full flex justify-between gap-[5vw]">
         <div className="flex flex-col mt-[30px] flex-1 gap-[10px]">
           <label>Nome do produto</label>
