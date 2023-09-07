@@ -4,6 +4,59 @@ import classNames from "classnames";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
+const AccordionItem = forwardRef<
+  React.ElementRef<typeof Accordion.Item>,
+  { children: React.ReactNode; className?: string; value: string }
+>(({ children, className, ...props }, forwardedRef) => (
+  <Accordion.Item
+    className={classNames(
+      "focus-within:shadow-mauve12 mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 focus-within:shadow-[0_0_0_2px]",
+      className
+    )}
+    {...props}
+    ref={forwardedRef}
+  >
+    {children}
+  </Accordion.Item>
+));
+
+const AccordionTrigger = forwardRef<
+  React.ElementRef<typeof Accordion.Trigger>,
+  { children: React.ReactNode; className?: string }
+>(({ children, className, ...props }, forwardedRef) => (
+  <Accordion.Header className="flex">
+    <Accordion.Trigger
+      className={classNames(
+        "group flex px-[18px] py-[25px] flex-1 cursor-default items-center justify-between bg-[#36393F] text-[15px] leading-none outline-none",
+        className
+      )}
+      {...props}
+      ref={forwardedRef}
+    >
+      {children}
+      <span className="icon-[ep--arrow-up-bold] text-xl bg-[#5F71CB] ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180" />
+    </Accordion.Trigger>
+  </Accordion.Header>
+));
+AccordionTrigger.displayName = "AccordionTrigger";
+
+const AccordionContent = forwardRef<
+  React.ElementRef<typeof Accordion.Content>,
+  { children: React.ReactNode; className?: string }
+>(({ children, className, ...props }, forwardedRef) => (
+  <Accordion.Content
+    className={classNames(
+      "data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden text-[15px]",
+      className
+    )}
+    {...props}
+    ref={forwardedRef}
+  >
+    <div className="py-[15px] px-5 flex flex-col">{children}</div>
+  </Accordion.Content>
+));
+AccordionTrigger.displayName = "AccordionContent";
+
 export function DiscordToken() {
   const [inputToken, setInputToken] = useState(
     "2390I4R2398JI9WENFJINDFJINSDJIFNSDIJFJ8asassssasasaasasasasasUHR78U34HRU43HU"
@@ -60,56 +113,3 @@ export function DiscordToken() {
     </Accordion.Root>
   );
 }
-
-const AccordionItem = forwardRef<
-  React.ElementRef<typeof Accordion.Item>,
-  { children: React.ReactNode; className?: string; value: string }
->(({ children, className, ...props }, forwardedRef) => (
-  <Accordion.Item
-    className={classNames(
-      "focus-within:shadow-mauve12 mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 focus-within:shadow-[0_0_0_2px]",
-      className
-    )}
-    {...props}
-    ref={forwardedRef}
-  >
-    {children}
-  </Accordion.Item>
-));
-
-const AccordionTrigger = forwardRef<
-  React.ElementRef<typeof Accordion.Trigger>,
-  { children: React.ReactNode; className?: string }
->(({ children, className, ...props }, forwardedRef) => (
-  <Accordion.Header className="flex">
-    <Accordion.Trigger
-      className={classNames(
-        "group flex px-[18px] py-[25px] flex-1 cursor-default items-center justify-between bg-[#36393F] text-[15px] leading-none outline-none",
-        className
-      )}
-      {...props}
-      ref={forwardedRef}
-    >
-      {children}
-      <span className="icon-[ep--arrow-up-bold] text-xl bg-[#5F71CB] ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180" />
-    </Accordion.Trigger>
-  </Accordion.Header>
-));
-AccordionTrigger.displayName = "AccordionTrigger";
-
-const AccordionContent = forwardRef<
-  React.ElementRef<typeof Accordion.Content>,
-  { children: React.ReactNode; className?: string }
->(({ children, className, ...props }, forwardedRef) => (
-  <Accordion.Content
-    className={classNames(
-      "data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden text-[15px]",
-      className
-    )}
-    {...props}
-    ref={forwardedRef}
-  >
-    <div className="py-[15px] px-5 flex flex-col">{children}</div>
-  </Accordion.Content>
-));
-AccordionTrigger.displayName = "AccordionContent";
