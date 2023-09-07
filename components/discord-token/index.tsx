@@ -56,6 +56,10 @@ export function DiscordToken() {
                   className="w-full border border-[#5F71CB] flex-1 p-[15px] rounded-[5px] bg-transparent outline-none"
                   disabled
                 />
+                <span className="opacity-70">
+                  Esse token não pode ser compartilhado, e não poderá ser
+                  renovado ou revogado.
+                </span>
               </div>
             </Tooltip.Trigger>
             <Tooltip.Portal>
