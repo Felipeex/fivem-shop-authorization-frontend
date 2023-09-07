@@ -28,6 +28,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@iconify-json/eos-icons": "^1.1.7",
     "@iconify-json/flat-color-icons": "^1.1.7",
     "@iconify-json/ic": "^1.1.14",
     "@iconify-json/icon-park-outline": "^1.1.12",
