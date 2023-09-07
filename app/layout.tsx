@@ -8,6 +8,16 @@ const poppins = Poppins({ weight: ["500", "400", "700"], subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Fivem Shop - Autenticação",
   description: "Serviço de autenticação para Fivem.",
+  icons: "./favicon.ico",
+  creator: "Felipeex",
+  keywords: [
+    "fivem",
+    "autenticação",
+    "authorization",
+    "fivem-auth",
+    "fivem-security",
+  ],
+  category: "security",
 };
 
 export default async function RootLayout({

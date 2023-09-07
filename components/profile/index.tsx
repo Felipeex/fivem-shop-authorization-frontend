@@ -3,14 +3,21 @@ import * as Popover from "@radix-ui/react-popover";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 interface ProfileProps {
   session: Session | null;
 }
 
 export function Profile({ session }: ProfileProps) {
+  const [PopoverOpen, setPopoverOpen] = useState(false);
+  function handleClick() {
+    setPopoverOpen(!PopoverOpen);
+  }
+
   return (
-    <Popover.Root>
+    <Popover.Root open={PopoverOpen} onOpenChange={setPopoverOpen}>
       <Popover.Trigger asChild>
         <section className="flex gap-1 items-center cursor-pointer">
           <Image
@@ -35,10 +42,12 @@ export function Profile({ session }: ProfileProps) {
           className="outline-none rounded-[5px] flex flex-col gap-[10px] p-[10px] w-[170px] bg-[#444851] shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] focus:shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2),0_0_0_2px_theme(colors.violet7)] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
           sideOffset={5}
         >
-          <div className="flex items-center gap-2 cursor-pointer">
-            <span className="icon-[icon-park-outline--config] text-xl text-white" />
-            <h2 className="text-base">Configurações</h2>
-          </div>
+          <Link href="/dashboard/config" onClick={handleClick}>
+            <div className="flex items-center gap-2 cursor-pointer">
+              <span className="icon-[icon-park-outline--config] text-xl text-white" />
+              <h2 className="text-base">Configurações</h2>
+            </div>
+          </Link>
           <div className="w-full h-[1px] bg-white opacity-5" />
           <div
             className="flex items-center gap-2 cursor-pointer"

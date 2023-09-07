@@ -7,7 +7,6 @@ import { verifyPlan } from "../utils/verifyPlan";
 
 export const metadata: Metadata = {
   title: "Dashboard - Autenticação",
-  description: "Serviço de autenticação para Fivem.",
 };
 
 export default async function Page() {
