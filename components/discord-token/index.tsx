@@ -1,5 +1,5 @@
 "use client";
-import React, { forwardRef, useRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import classNames from "classnames";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -95,6 +95,7 @@ const AccordionTrigger = forwardRef<
     </Accordion.Trigger>
   </Accordion.Header>
 ));
+AccordionTrigger.displayName = "AccordionTrigger";
 
 const AccordionContent = forwardRef<
   React.ElementRef<typeof Accordion.Content>,
@@ -111,3 +112,4 @@ const AccordionContent = forwardRef<
     <div className="py-[15px] px-5 flex flex-col">{children}</div>
   </Accordion.Content>
 ));
+AccordionTrigger.displayName = "AccordionContent";
