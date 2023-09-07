@@ -25,6 +25,9 @@ export const metadata: Metadata = {
       "https://cdn.discordapp.com/attachments/946522153887621140/1149213477748088852/fivem-shop.png",
     ],
   },
+  assets: [
+    "https://cdn.discordapp.com/attachments/946522153887621140/1149213477748088852/fivem-shop.png",
+  ],
 };
 
 export default async function RootLayout({
