@@ -43,13 +43,6 @@ export default async function DashboardLayout({
       <main className="max-w-[90vw] m-auto">
         <header className="mt-[50px] flex justify-between">
           <Profile session={session} />
-          {plan.data && (
-            <Link href="dashboard/product/create">
-              <button className="mt-[15px] bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
-                Criar Produto
-              </button>
-            </Link>
-          )}
         </header>
         <div className="mt-[50px]">{children}</div>
       </main>
