@@ -2,8 +2,10 @@ import { DiscordToken } from "@/components/discord-token";
 import { authOptions } from "@/config/auth";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { verifyPlan } from "@/app/utils/verifyPlan";
+import { NextAuthCookie } from "@/app/utils/next-auth-cookie";
 
 export const metadata: Metadata = {
   title: "Configuração - Autenticação",
@@ -14,6 +16,8 @@ export default async function Page() {
   if (!session) {
     redirect("/");
   }
+  const cookie = NextAuthCookie();
+  const plan = await verifyPlan(cookie!);
   return (
     <>
       <Link href="/dashboard">
@@ -33,10 +37,12 @@ export default async function Page() {
             Informações de cobrança
           </span>
           <p className="text-base font-normal">
-            Sua assinatura termina em{" "}
-            <strong className="font-medium">25 set. de 2023.</strong> Você pode
-            habilitar o pagamento automático ao lado, e não precisar se
-            preocopar com a renovação manualmente.
+            Sua assinatura {!plan.data.isExpired ? "termina " : "terminou"}
+            <strong className="font-medium">
+              {!plan.data.isExpired && plan.data.distance}.{" "}
+            </strong>
+            Você pode habilitar o pagamento automático ao lado, e não precisar
+            se preocopar com a renovação manualmente.
           </p>
         </div>
         <div className="rounded-md bg-[#36393F] flex-1 py-[25px] px-[18px] flex flex-col justify-between">

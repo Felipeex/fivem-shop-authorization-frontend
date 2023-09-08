@@ -1,10 +1,9 @@
 import { Profile } from "@/components/profile";
 import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
-import { cookies } from "next/headers";
 import { verifyPlan } from "../utils/verifyPlan";
-import Link from "next/link";
 import { UnplannedAlert } from "@/components/unplanned-alert";
+import { NextAuthCookie } from "../utils/next-auth-cookie";
 
 export default async function DashboardLayout({
   children,
@@ -12,8 +11,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  const cookieStore = cookies();
-  const cookie = cookieStore.get("next-auth.session-token")?.value;
+  const cookie = NextAuthCookie();
   if (!cookie) return <>{children}</>;
   const plan = await verifyPlan(cookie);
 

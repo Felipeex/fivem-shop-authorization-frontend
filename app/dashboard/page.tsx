@@ -2,9 +2,9 @@ import { authOptions } from "@/config/auth";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { verifyPlan } from "../utils/verifyPlan";
 import Link from "next/link";
+import { NextAuthCookie } from "../utils/next-auth-cookie";
 
 export const metadata: Metadata = {
   title: "Dashboard - Autenticação",
@@ -15,8 +15,7 @@ export default async function Page() {
   if (!session) {
     redirect("/");
   }
-  const cookieStore = cookies();
-  const cookie = cookieStore.get("next-auth.session-token")?.value;
+  const cookie = NextAuthCookie();
   const plan = await verifyPlan(cookie!);
 
   return (
