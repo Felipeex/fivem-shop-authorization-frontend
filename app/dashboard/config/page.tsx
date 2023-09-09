@@ -13,11 +13,9 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
-  if (!session) {
-    redirect("/");
-  }
   const cookie = NextAuthCookie();
   const plan = await verifyPlan(cookie!);
+  if (!session || !plan.data) redirect("/");
   return (
     <>
       <Link href="/dashboard">
