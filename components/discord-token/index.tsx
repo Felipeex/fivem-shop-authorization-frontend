@@ -4,11 +4,14 @@ import classNames from "classnames";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
-export function DiscordToken() {
+interface DiscordTokenProps {
+  discordToken: string;
+}
+
+export function DiscordToken({ discordToken }: DiscordTokenProps) {
+  console.log(discordToken);
   const [tooltipOpen, setTooltopOpen] = useState(false);
-  const [inputToken, setInputToken] = useState(
-    "2390I4R2398JI9WENFJINDFJINSDJIFNSDIJFJ8asassssasasaasasasasasUHR78U34HRU43HU"
-  );
+  const [inputToken] = useState(discordToken);
   const [copied, setCopied] = useState(false);
 
   async function handleCopy(e: React.MouseEvent<HTMLInputElement>) {
@@ -50,7 +53,7 @@ export function DiscordToken() {
                 className="w-full relative mt-[10px] rounded-[5px] overflow-hidden"
                 onClick={handleCopy}
               >
-                <div className="absolute w-[97%] h-5 mt-4 ml-1 mx-auto rounded-[5px] bg-[rgba(45, 52, 57, 0.03)] backdrop-blur-sm hover:backdrop-blur-none" />
+                <div className="absolute w-[97%] h-6 mt-4 ml-1 mx-auto rounded-[5px] bg-[rgba(45, 52, 57, 0.03)] backdrop-blur-sm hover:backdrop-blur-none" />
                 <input
                   value={inputToken}
                   className="w-full border border-[#5F71CB] flex-1 p-[15px] rounded-[5px] bg-transparent outline-none"

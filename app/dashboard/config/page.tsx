@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { verifyPlan } from "@/app/utils/verifyPlan";
 import { NextAuthCookie } from "@/app/utils/next-auth-cookie";
+import { AuthApi } from "@/app/services/auth-api";
 
 export const metadata: Metadata = {
   title: "Configuração - Autenticação",
@@ -16,6 +17,12 @@ export default async function Page() {
   const cookie = NextAuthCookie();
   const plan = await verifyPlan(cookie!);
   if (!session || !plan.data) redirect("/");
+
+  const discordToken = await AuthApi("/me/discordtoken", {
+    headers: {
+      Authorization: `Bearer ${cookie}`,
+    },
+  });
   return (
     <>
       <Link href="/dashboard">
@@ -25,7 +32,7 @@ export default async function Page() {
         </ul>
       </Link>
 
-      <DiscordToken />
+      <DiscordToken discordToken={discordToken.data} />
 
       <h2 className="text-2xl font-semibold mt-9">Suas assinatura</h2>
 
