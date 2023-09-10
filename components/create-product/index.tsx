@@ -121,8 +121,8 @@ export function CreateProduct() {
               </h2>
 
               <section className="grid grid-cols-2 gap-6">
-                {files.map((file) => (
-                  <div className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
+                {files.map((file, key) => (
+                  <div key={key} className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
                     <div className="flex items-center gap-[15px]">
                       <span className="icon-[logos--lua] text-[30px]" />
                       <ul>
