@@ -27,18 +27,20 @@ export function CreateProduct() {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<createFileType>({
     resolver: zodResolver(createFile),
   });
 
-  function onSubmitFile(data: createFileType) {
-    setFiles((files) => [...files, { ...data }]);
+  function onSubmitFile(newFile: createFileType) {
+    /* return setError("name", { message: "Esse arquivo já existe." }); */
+    setFiles((files) => [...files, newFile]);
     reset();
   }
 
-  function handleDeleteFile(file: createFileType) {
-    const removeFile = files.filter((file) => file !== file);
+  function handleDeleteFile(remFile: createFileType) {
+    const removeFile = files.filter((file) => file !== remFile);
     setFiles(removeFile);
   }
 
@@ -99,8 +101,8 @@ export function CreateProduct() {
                     <option className="py-[18px]">
                       Escolha o lado arquivo
                     </option>
-                    <option value="client">Servidor</option>
-                    <option value="server">Cliente</option>
+                    <option value="server">Servidor</option>
+                    <option value="client">Cliente</option>
                   </select>
                   <span className="text-red-400">
                     {errors.side?.message && "Selecione uma opção."}
@@ -122,7 +124,10 @@ export function CreateProduct() {
 
               <section className="grid grid-cols-2 gap-6">
                 {files.map((file, key) => (
-                  <div key={key} className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
+                  <div
+                    key={key}
+                    className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]"
+                  >
                     <div className="flex items-center gap-[15px]">
                       <span className="icon-[logos--lua] text-[30px]" />
                       <ul>
