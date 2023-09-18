@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { verifyPlan } from "../utils/verifyPlan";
-import Link from "next/link";
 import { NextAuthCookie } from "../utils/next-auth-cookie";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Dashboard - Autenticação",
@@ -17,7 +17,7 @@ export default async function Page() {
   const plan = await verifyPlan(cookie!);
 
   return (
-    <section className="flex">
+    <section className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
       {plan.data && (
         <Link href="dashboard/product/create">
           <div className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
