@@ -1,13 +1,19 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import {
+  AuthApi,
+  FileProps,
+  ProductProps,
+  ProductPropsWithFile,
+} from "@/app/services/auth-api";
 import Editor from "@monaco-editor/react";
-import { AuthApi, FileProps } from "@/app/services/auth-api";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { useRouter } from "next/navigation";
 
-const createProduct = z.object({
+const updateProduct = z.object({
   name: z
     .string()
     .nonempty({ message: "Nome é obrigatório." })
@@ -17,24 +23,38 @@ const createProduct = z.object({
   version: z.string(),
 });
 
-type createProductType = z.infer<typeof createProduct>;
+type updateProductType = z.infer<typeof updateProduct>;
 
-const createFile = z.object({
+const updateFile = z.object({
   name: z
     .string()
     .regex(/^[a-zA-Z0-9_.-]+\.lua$/, { message: "Formato inválido." }),
   side: z.enum(["client", "server"]),
 });
 
-type createFileType = z.infer<typeof createFile>;
+type updateFileType = z.infer<typeof updateFile>;
 
-interface CreateProductProps {
+interface updateProductProps {
   cookie: string;
+  params: Params;
 }
 
-export function CreateProduct(props: CreateProductProps) {
+export function UpdateProduct(props: updateProductProps) {
   const editorRef = useRef<any>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const getProduct = async () => {
+      const getProduct = await AuthApi(props.cookie)<{
+        products: ProductPropsWithFile[];
+      }>(`/product/${props.params.id}`);
+      const product = getProduct.data.products[0];
+      resetProduct({ ...product });
+      setFiles(product?.files);
+    };
+    getProduct();
+  }, [props.params.id]);
+
   const [loading, setLoading] = useState(false);
   const [onEdit, setOnEdit] = useState<{
     file?: FileProps;
@@ -48,30 +68,28 @@ export function CreateProduct(props: CreateProductProps) {
     reset: resetFile,
     setError: setErrorFile,
     formState: { errors: errorsFile },
-  } = useForm<createFileType>({
-    resolver: zodResolver(createFile),
+  } = useForm<updateFileType>({
+    resolver: zodResolver(updateFile),
   });
 
   const {
     register: registerProduct,
     handleSubmit: handleSubmitProduct,
-    setError: setErrorProduct,
     formState: { errors: errorsProduct },
-  } = useForm<createProductType>({
-    resolver: zodResolver(createProduct),
-    defaultValues: {
-      version: "1.0.0",
-    },
+    setError: setErrorProduct,
+    reset: resetProduct,
+  } = useForm<updateProductType>({
+    resolver: zodResolver(updateProduct),
   });
 
   function handleEditorDidMount(editor: any) {
     editorRef.current = editor;
   }
 
-  async function onSubmitProduct(product: createProductType) {
+  async function onSubmitProduct(product: updateProductType) {
     setLoading(true);
     try {
-      await AuthApi(props.cookie).post("/product", {
+      await AuthApi(props.cookie).put(`/product/${props.params.id}`, {
         ...product,
         files: files,
       });
@@ -87,7 +105,7 @@ export function CreateProduct(props: CreateProductProps) {
     }
   }
 
-  function onSubmitFile(newFile: createFileType) {
+  function onSubmitFile(newFile: updateFileType) {
     const isExist = files.filter(
       (file) => file.name === newFile.name && file.side === newFile.side
     );
@@ -105,12 +123,12 @@ export function CreateProduct(props: CreateProductProps) {
     resetFile();
   }
 
-  function handleDeleteFile(remFile: createFileType) {
+  function handleDeleteFile(remFile: updateFileType) {
     const removeFile = files.filter((file) => file !== remFile);
     setFiles(removeFile);
   }
 
-  function enterEditFile(file: createFileType) {
+  function enterEditFile(file: updateFileType) {
     setOnEdit({ file, state: true });
     window.scrollTo(0, 0);
   }

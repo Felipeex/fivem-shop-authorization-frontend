@@ -19,3 +19,10 @@ export interface ProductProps {
   name: string;
   version: string;
 }
+
+export interface ProductPropsWithFile {
+  id: string;
+  name: string;
+  version: string;
+  files: FileProps[];
+}

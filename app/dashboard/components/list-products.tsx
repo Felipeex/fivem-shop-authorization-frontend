@@ -8,10 +8,11 @@ import { useState } from "react";
 
 interface ProductProps {
   products: ProductPropsApi[];
+  plan: any;
   cookie: string;
 }
 
-export function Products({ products, cookie }: ProductProps) {
+export function Products({ products, cookie, plan }: ProductProps) {
   const [Products, setProducts] = useState<ProductPropsApi[]>(products);
   const [loading, setLoading] = useState<{ key: number; isLoading: boolean }>();
 
@@ -29,6 +30,21 @@ export function Products({ products, cookie }: ProductProps) {
   }
   return (
     <>
+      {plan && Products.length <= 0 && (
+        <Link href="dashboard/product/create">
+          <div className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
+            <h2 className="font-normal text-[16px] leading-normal">
+              Meu primeiro produto
+            </h2>
+            <span className="text-[#75808A] font-normal text-[16px] leading-none">
+              Clique ao botão abaixo
+            </span>
+            <button className="mt-[15px] bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
+              Criar meu primeiro produto
+            </button>
+          </div>
+        </Link>
+      )}
       {Products.map((product, key) => (
         <div
           key={key}

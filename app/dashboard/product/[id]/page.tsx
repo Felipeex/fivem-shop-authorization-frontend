@@ -5,8 +5,10 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { CreateProduct } from "@/components/create-product";
 import Link from "next/link";
+import { UpdateProduct } from "@/components/edit-product";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
-export default async function Page() {
+export default async function Page({ params }: Params) {
   const session = await getServerSession(authOptions);
   const cookie = NextAuthCookie()!;
   const plan = await verifyPlan(cookie);
@@ -17,10 +19,10 @@ export default async function Page() {
       <Link href="/dashboard">
         <ul className="flex items-center gap-4">
           <span className="icon-[ep--arrow-left-bold] text-3xl" />
-          <h1 className="text-[38px] font-bold">Criando seu produto</h1>
+          <h1 className="text-[38px] font-bold">Editar produto</h1>
         </ul>
       </Link>
-      <CreateProduct cookie={cookie} />
+      <UpdateProduct cookie={cookie} params={params} />
     </>
   );
 }
