@@ -34,7 +34,11 @@ export function CreateProduct() {
   });
 
   function onSubmitFile(newFile: createFileType) {
-    /* return setError("name", { message: "Esse arquivo já existe." }); */
+    const isExist = files.filter(
+      (file) => file.name === newFile.name && file.side === newFile.side
+    );
+    if (isExist.length)
+      return setError("name", { message: "Esse arquivo já existe." });
     setFiles((files) => [...files, newFile]);
     reset();
   }
