@@ -3,13 +3,19 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
-/* const createProduct = z.object({
-  name: z.string().nonempty({ message: "Nome é obrigatório" }),
-  version: z.string().regex(/^\d+\.\d+\.\d+$/),
+const createProduct = z.object({
+  name: z
+    .string()
+    .nonempty({ message: "Nome é obrigatório." })
+    .regex(/^[a-zA-Z0-9_\- ]+$/, {
+      message: "Formato inválido.",
+    }),
+  version: z.string(),
 });
 
-type createProductType = z.infer<typeof createProduct>; */
+type createProductType = z.infer<typeof createProduct>;
 
 const createFile = z.object({
   name: z
@@ -21,26 +27,42 @@ const createFile = z.object({
 type createFileType = z.infer<typeof createFile>;
 
 export function CreateProduct() {
+  const router = useRouter();
   const [select, setSelect] = useState("");
   const [files, setFiles] = useState<createFileType[]>([]);
   const {
-    register,
-    handleSubmit,
-    reset,
-    setError,
-    formState: { errors },
+    register: registerFile,
+    handleSubmit: handleSubmitFile,
+    reset: resetFile,
+    setError: setErrorFile,
+    formState: { errors: errorsFile },
   } = useForm<createFileType>({
     resolver: zodResolver(createFile),
   });
+
+  const {
+    register: registerProduct,
+    handleSubmit: handleSubmitProduct,
+    formState: { errors: errorsProduct },
+  } = useForm<createProductType>({
+    resolver: zodResolver(createProduct),
+    defaultValues: {
+      version: "1.0.0",
+    },
+  });
+
+  function onSubmitProduct(product: createProductType) {
+    router.push("/dashboard");
+  }
 
   function onSubmitFile(newFile: createFileType) {
     const isExist = files.filter(
       (file) => file.name === newFile.name && file.side === newFile.side
     );
     if (isExist.length)
-      return setError("name", { message: "Esse arquivo já existe." });
+      return setErrorFile("name", { message: "Esse arquivo já existe." });
     setFiles((files) => [...files, newFile]);
-    reset();
+    resetFile();
   }
 
   function handleDeleteFile(remFile: createFileType) {
@@ -54,24 +76,25 @@ export function CreateProduct() {
         <div className="flex flex-col mt-[30px] flex-1 gap-[10px] max-w-[537px]">
           <label>Nome do produto</label>
           <input
+            {...registerProduct("name")}
             placeholder="nome-do-script"
             className="flex-1 p-[15px] rounded-[5px] bg-[#1F1F1F] border-none placeholder:font-[#FFFFFF66] focus:outline outline-[#5F71CB]"
           />
+          <span className="text-red-400">{errorsProduct.name?.message}</span>
         </div>
         <div className="flex flex-col mt-[30px] flex-1 gap-[10px] max-w-[537px]">
           <label>Versão do produto</label>
           <input
+            {...registerProduct("version")}
             placeholder="1.0.0"
             className="flex-1  p-[15px] rounded-[5px] bg-[#1F1F1F] border-none placeholder:font-[#FFFFFF66] focus:outline outline-[#5F71CB]"
           />
+          <span className="text-red-400">{errorsProduct.version?.message}</span>
         </div>
       </div>
 
       <section className="flex justify-between gap-5 mb-5">
-        <form
-          onSubmit={handleSubmit(onSubmitFile)}
-          className="flex flex-col gap-[26px] flex-1 max-w-[537px]"
-        >
+        <form className="flex flex-col gap-[26px] flex-1 max-w-[537px]">
           <h2 className="mt-[50px] text-[25px] font-bold">Criando arquivos</h2>
           <div className="flex flex-col gap-[10px]">
             <div className="flex flex-col flex-1 gap-[10px]">
@@ -90,16 +113,22 @@ export function CreateProduct() {
               <>
                 <label className="mt-[30px]">Nome do arquivo</label>
                 <input
-                  {...register("name", { required: true })}
+                  {...registerFile("name", {
+                    required: true,
+                  })}
                   placeholder="nome-do-arquivo.lua"
                   className="p-[15px] rounded-[5px] bg-[#1F1F1F] border-none placeholder:font-[#FFFFFF66] focus:outline outline-[#5F71CB]"
                 />
-                <span className="text-red-400">{errors.name?.message}</span>
+                <span className="text-red-400">
+                  {errorsFile.name?.message === "Required"
+                    ? "Escolha um nome."
+                    : errorsFile.name?.message}
+                </span>
 
                 <div className="flex flex-col gap-[10px] mt-[30px]">
                   <label>Lado de Operação</label>
                   <select
-                    {...register("side", { required: true })}
+                    {...registerFile("side", { required: true })}
                     className="appearance-none flex-1 bg-[#1F1F1F] p-[15px] rounded-[5px] border-none focus:outline outline-[#5F71CB]"
                   >
                     <option className="py-[18px]">
@@ -109,13 +138,16 @@ export function CreateProduct() {
                     <option value="client">Cliente</option>
                   </select>
                   <span className="text-red-400">
-                    {errors.side?.message && "Selecione uma opção."}
+                    {errorsFile.side?.message && "Selecione uma opção."}
                   </span>
                 </div>
               </>
             )}
           </div>
-          <button className="bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
+          <button
+            onClick={handleSubmitFile(onSubmitFile)}
+            className="bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]"
+          >
             Criar arquivo
           </button>
         </form>
@@ -159,7 +191,10 @@ export function CreateProduct() {
                 ))}
               </section>
 
-              <button className="flex-1 bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]">
+              <button
+                onClick={handleSubmitProduct(onSubmitProduct)}
+                className="flex-1 bg-[#5F71CB] px-[30px] py-3 rounded-md transition-colors hover:bg-[#485598]"
+              >
                 Finalizar produto
               </button>
             </div>
