@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { verifyPlan } from "../utils/verifyPlan";
 import { NextAuthCookie } from "../utils/next-auth-cookie";
 import Link from "next/link";
+import { Products } from "./components/list-products";
+import { AuthApi, ProductProps } from "../services/auth-api";
 
 export const metadata: Metadata = {
   title: "Dashboard - Autenticação",
@@ -13,12 +15,15 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/");
-  const cookie = NextAuthCookie();
-  const plan = await verifyPlan(cookie!);
+  const cookie = NextAuthCookie()!;
+  const plan = await verifyPlan(cookie);
+  const {
+    data: { products },
+  } = await AuthApi(cookie)<{ products: ProductProps[] }>("/product");
 
   return (
-    <section className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
-      {plan.data && (
+    <section className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(350px,1fr))] mb-5">
+      {plan.data && products.length <= 0 && (
         <Link href="dashboard/product/create">
           <div className="rounded-[10px] border border-[#5F71CB] p-5 flex flex-col bg-[#2E3035]">
             <h2 className="font-normal text-[16px] leading-none">
@@ -33,6 +38,8 @@ export default async function Page() {
           </div>
         </Link>
       )}
+
+      <Products products={products} cookie={cookie} />
     </section>
   );
 }
