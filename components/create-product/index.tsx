@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import Editor from "@monaco-editor/react";
 import { AuthApi, FileProps } from "@/app/services/auth-api";
+import Editor from "@monaco-editor/react";
 
 const createProduct = z.object({
   name: z

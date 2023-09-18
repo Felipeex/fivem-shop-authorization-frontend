@@ -6,11 +6,9 @@ import { z } from "zod";
 import {
   AuthApi,
   FileProps,
-  ProductProps,
   ProductPropsWithFile,
 } from "@/app/services/auth-api";
 import Editor from "@monaco-editor/react";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { useRouter } from "next/navigation";
 
 const updateProduct = z.object({
