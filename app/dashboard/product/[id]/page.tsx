@@ -5,9 +5,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { UpdateProduct } from "@/components/edit-product";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
-export default async function Page({ params }: Params) {
+export default async function Page({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   const cookie = NextAuthCookie()!;
   const plan = await verifyPlan(cookie);

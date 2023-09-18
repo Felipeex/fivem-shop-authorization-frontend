@@ -36,7 +36,7 @@ type updateFileType = z.infer<typeof updateFile>;
 
 interface updateProductProps {
   cookie: string;
-  params: Params;
+  params: { id: string };
 }
 
 export function UpdateProduct(props: updateProductProps) {
