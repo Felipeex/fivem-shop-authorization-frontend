@@ -31,7 +31,7 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      await AuthApi.post("", { id: user.id, name: user.name });
+      await AuthApi("").post("", { id: user.id, name: user.name });
       return true;
     },
     async session({ session, token }) {

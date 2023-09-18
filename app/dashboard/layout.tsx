@@ -1,9 +1,9 @@
-import { Profile } from "@/components/profile";
 import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
 import { verifyPlan } from "../utils/verifyPlan";
 import { UnplannedAlert } from "@/components/unplanned-alert";
 import { NextAuthCookie } from "../utils/next-auth-cookie";
+import { Header } from "@/components/header";
 
 export default async function DashboardLayout({
   children,
@@ -39,9 +39,7 @@ export default async function DashboardLayout({
         </div>
       )}
       <main className="max-w-[90vw] m-auto">
-        <header className="mt-[50px] flex justify-between">
-          <Profile session={session} />
-        </header>
+        <Header session={session} />
         <div className="mt-[50px]">{children}</div>
       </main>
     </>

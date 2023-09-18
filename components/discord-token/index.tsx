@@ -9,7 +9,6 @@ interface DiscordTokenProps {
 }
 
 export function DiscordToken({ discordToken }: DiscordTokenProps) {
-  console.log(discordToken);
   const [tooltipOpen, setTooltopOpen] = useState(false);
   const [inputToken] = useState(discordToken);
   const [copied, setCopied] = useState(false);

@@ -14,15 +14,11 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
-  const cookie = NextAuthCookie();
-  const plan = await verifyPlan(cookie!);
+  const cookie = NextAuthCookie()!;
+  const plan = await verifyPlan(cookie);
   if (!session || !plan.data) redirect("/");
 
-  const discordToken = await AuthApi("/me/discordtoken", {
-    headers: {
-      Authorization: `Bearer ${cookie}`,
-    },
-  });
+  const discordToken = await AuthApi(cookie)("/me/discordtoken");
   return (
     <>
       <Link href="/dashboard">
