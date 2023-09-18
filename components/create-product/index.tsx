@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import Editor from "@monaco-editor/react";
+import { FileProps } from "@/app/services/auth-api";
 
 const createProduct = z.object({
   name: z
@@ -27,9 +29,14 @@ const createFile = z.object({
 type createFileType = z.infer<typeof createFile>;
 
 export function CreateProduct() {
+  const editorRef = useRef<any>(null);
   const router = useRouter();
+  const [onEdit, setOnEdit] = useState<{
+    file?: FileProps;
+    state: boolean;
+  }>();
   const [select, setSelect] = useState("");
-  const [files, setFiles] = useState<createFileType[]>([]);
+  const [files, setFiles] = useState<FileProps[]>([]);
   const {
     register: registerFile,
     handleSubmit: handleSubmitFile,
@@ -51,6 +58,10 @@ export function CreateProduct() {
     },
   });
 
+  function handleEditorDidMount(editor: any, monaco: any) {
+    editorRef.current = editor;
+  }
+
   function onSubmitProduct(product: createProductType) {
     router.push("/dashboard");
   }
@@ -70,8 +81,50 @@ export function CreateProduct() {
     setFiles(removeFile);
   }
 
+  function enterEditFile(file: createFileType) {
+    setOnEdit({ file, state: true });
+    window.scrollTo(0, 0);
+  }
+
+  function handleCloseEditFile() {
+    const filteredFiles = files.filter(
+      (file) =>
+        `${file.name}-${file.side}` !==
+        `${onEdit?.file?.name}-${onEdit?.file?.side}`
+    );
+    const code = editorRef?.current?.getValue();
+    setFiles([{ ...onEdit?.file!, code }, ...filteredFiles]);
+    setOnEdit({ state: false });
+  }
+
   return (
     <>
+      {onEdit?.state && (
+        <section className="w-screen h-screen flex flex-col absolute top-0 left-0 z-50">
+          <button
+            onClick={handleCloseEditFile}
+            className="bg-[#5F71CB] px-[30px] py-3 transition-colors hover:bg-[#485598]"
+          >
+            Voltar para criação
+          </button>
+          <Editor
+            width="100vw"
+            height="100vh"
+            defaultLanguage="lua"
+            defaultValue={
+              onEdit.file?.code
+                ? onEdit.file?.code
+                : `-- Escreva aqui seu código do arquivo - ${
+                    onEdit.file?.name
+                  } | ${
+                    onEdit.file?.side === "server" ? "Servidor" : "Cliente"
+                  }`
+            }
+            theme="vs-dark"
+            onMount={handleEditorDidMount}
+          />
+        </section>
+      )}
       <div className="w-full flex justify-between gap-5">
         <div className="flex flex-col mt-[30px] flex-1 gap-[10px] max-w-[537px]">
           <label>Nome do produto</label>
@@ -92,7 +145,6 @@ export function CreateProduct() {
           <span className="text-red-400">{errorsProduct.version?.message}</span>
         </div>
       </div>
-
       <section className="flex justify-between gap-5 mb-5">
         <form className="flex flex-col gap-[26px] flex-1 max-w-[537px]">
           <h2 className="mt-[50px] text-[25px] font-bold">Criando arquivos</h2>
@@ -158,7 +210,7 @@ export function CreateProduct() {
                 Todos arquivos
               </h2>
 
-              <section className="grid grid-cols-2 gap-6">
+              <section className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
                 {files.map((file, key) => (
                   <div
                     key={key}
@@ -177,7 +229,10 @@ export function CreateProduct() {
                       </ul>
                     </div>
                     <div className="flex gap-1">
-                      <button className="w-full mt-[15px] bg-[#5F71CB] py-3 rounded-md transition-colors hover:bg-[#485598]">
+                      <button
+                        onClick={() => enterEditFile(file)}
+                        className="w-full mt-[15px] bg-[#5F71CB] py-3 rounded-md transition-colors hover:bg-[#485598]"
+                      >
                         Editar código
                       </button>
                       <button
