@@ -3,7 +3,6 @@ import { verifyPlan } from "@/app/utils/verifyPlan";
 import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { CreateProduct } from "@/components/create-product";
 import Link from "next/link";
 import { UpdateProduct } from "@/components/edit-product";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
