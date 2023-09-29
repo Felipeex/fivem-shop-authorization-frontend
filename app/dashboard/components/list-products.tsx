@@ -65,6 +65,12 @@ export function Products({ products, cookie, plan }: ProductProps) {
                 Editar
               </button>
             </Link>
+            <a
+              href={`${process.env.NEXT_PUBLIC_AUTH_API_URL}/product/download/${product.name}`}
+              className="flex items-center justify-center mt-[15px] bg-emerald-500 px-[30px] py-3 rounded-md transition-colors hover:bg-emerald-600"
+            >
+              <span className="icon-[ic--round-download] text-lg" />
+            </a>
             <button
               onClick={() => handleDelete(product, key)}
               disabled={loading?.key === key && loading.isLoading}
