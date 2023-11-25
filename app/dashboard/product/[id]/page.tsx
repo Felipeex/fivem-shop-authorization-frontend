@@ -3,8 +3,8 @@ import { verifyPlan } from "@/app/utils/verifyPlan";
 import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { UpdateProduct } from "@/components/edit-product";
+import Link from "next/link";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);

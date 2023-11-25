@@ -3,10 +3,10 @@ import { authOptions } from "@/config/auth";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { verifyPlan } from "@/app/utils/verifyPlan";
 import { NextAuthCookie } from "@/app/utils/next-auth-cookie";
 import { AuthApi } from "@/app/services/auth-api";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Configuração - Autenticação",

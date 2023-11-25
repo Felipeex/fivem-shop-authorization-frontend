@@ -1,0 +1,1 @@
+[ ] Ao deletar um arquivo, não atualiza.
