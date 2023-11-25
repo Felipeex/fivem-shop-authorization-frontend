@@ -1,7 +1,7 @@
-import DiscordProvider from "next-auth/providers/discord";
-import type { AuthOptions } from "next-auth";
-import { sign, verify } from "jsonwebtoken";
 import { AuthApi } from "@/app/services/auth-api";
+import { sign, verify } from "jsonwebtoken";
+import type { AuthOptions } from "next-auth";
+import DiscordProvider from "next-auth/providers/discord";
 
 export const authOptions: AuthOptions = {
   session: {
